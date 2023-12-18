@@ -14,6 +14,8 @@ class FavoriteAdapter : ListAdapter<FavoriteShop, FavoriteItemViewHolder>(Favori
 
     // お気に入り画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
+    // Itemを押したときのメソッド
+    var onClickItem: ((String) -> Unit)? = null
 
     /**
      * ViewHolderを生成して返す
@@ -39,13 +41,19 @@ class FavoriteAdapter : ListAdapter<FavoriteShop, FavoriteItemViewHolder>(Favori
 class FavoriteItemViewHolder(private val binding: RecyclerFavoriteBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(favoriteShop: FavoriteShop, position: Int, adapter: FavoriteAdapter) {
-        // 偶数番目と奇数番目で背景色を変更させる
-        binding.rootView.setBackgroundColor(
-            ContextCompat.getColor(
-                binding.rootView.context,
-                if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
+        binding.rootView.apply {
+            // 偶数番目と奇数番目で背景色を変更させる
+            binding.rootView.setBackgroundColor(
+                ContextCompat.getColor(
+                    binding.rootView.context,
+                    if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
+                )
             )
-        )
+            // クリック時のイベントリスナーを割り当て
+            setOnClickListener {
+                adapter.onClickItem?.invoke(favoriteShop.url)
+            }
+        }
 
         // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
         binding.nameTextView.text = favoriteShop.name

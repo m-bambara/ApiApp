@@ -1,9 +1,9 @@
 package jp.techacademy.motoyoshi.apiapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+    }
+
+    override fun onClickItem(url: String) {
+        WebViewActivity.start(this, url)
     }
 
     /**

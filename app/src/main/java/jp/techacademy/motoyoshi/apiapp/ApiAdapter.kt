@@ -9,10 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import jp.techacademy.motoyoshi.apiapp.databinding.RecyclerFavoriteBinding
 
-
-
-
-
 /**
  * RecyclerView用Adapter
  * 第一引数: データを保持するクラス。今回はShop
@@ -25,6 +21,9 @@ class ApiAdapter : ListAdapter<Shop, ApiItemViewHolder>(ApiItemCallback()) {
 
     // 一覧画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
+
+    // Itemを押したときのメソッド
+    var onClickItem: ((String) -> Unit)? = null
 
     /**
      * ViewHolderを生成して返す
@@ -40,7 +39,7 @@ class ApiAdapter : ListAdapter<Shop, ApiItemViewHolder>(ApiItemCallback()) {
      * 指定された位置（position）のViewにShopの情報をセットする
      */
     override fun onBindViewHolder(holder: ApiItemViewHolder, position: Int) {
-        holder.bind(getItem(position), position,this)
+        holder.bind(getItem(position), position, this)
     }
 }
 
@@ -50,14 +49,20 @@ class ApiAdapter : ListAdapter<Shop, ApiItemViewHolder>(ApiItemCallback()) {
 class ApiItemViewHolder(private val binding: RecyclerFavoriteBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(shop: Shop, position: Int, adapter: ApiAdapter) {
-        // 偶数番目と奇数番目で背景色を変更させる
-        binding.rootView.setBackgroundColor(
-            ContextCompat.getColor(
-                binding.rootView.context,
-                if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
+        binding.rootView.apply {
+            // 偶数番目と奇数番目で背景色を変更させる
+            binding.rootView.setBackgroundColor(
+                ContextCompat.getColor(
+                    binding.rootView.context,
+                    if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray
+                )
             )
-        )
+            setOnClickListener {
+                adapter.onClickItem?.invoke(if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc)
+            }
+        }
 
+        // 1行の項目にShopの値をセット
         // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
         binding.nameTextView.text = shop.name
 
