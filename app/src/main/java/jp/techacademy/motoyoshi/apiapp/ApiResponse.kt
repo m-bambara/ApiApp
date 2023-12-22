@@ -1,7 +1,7 @@
 package jp.techacademy.motoyoshi.apiapp
-import com.squareup.moshi.JsonClass
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
@@ -18,6 +18,8 @@ data class Results(
 
 @JsonClass(generateAdapter = true)
 data class Shop(
+    @Json(name = "address") //住所
+    val address: String,
     @Json(name = "coupon_urls")
     val couponUrls: CouponUrls,
     @Json(name = "id")

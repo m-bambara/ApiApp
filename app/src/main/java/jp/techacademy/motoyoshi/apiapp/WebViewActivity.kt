@@ -15,6 +15,7 @@ class WebViewActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.webView.loadUrl(intent.getStringExtra(KEY_URL).toString())
+
     }
 
     companion object {

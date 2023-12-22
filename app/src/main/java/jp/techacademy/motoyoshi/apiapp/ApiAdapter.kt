@@ -65,6 +65,8 @@ class ApiItemViewHolder(private val binding: RecyclerFavoriteBinding) :
         // 1行の項目にShopの値をセット
         // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
         binding.nameTextView.text = shop.name
+        // 下にaddressを表示
+        binding.nameTextView2.text = shop.address
 
         // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
         Picasso.get().load(shop.logoImage).into(binding.imageView)
