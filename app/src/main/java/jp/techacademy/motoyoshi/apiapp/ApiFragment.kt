@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import jp.techacademy.motoyoshi.apiapp.databinding.FragmentApiBinding
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.net.URLEncoder
 
 class ApiFragment : Fragment() {
     private var _binding: FragmentApiBinding? = null
@@ -106,6 +108,57 @@ class ApiFragment : Fragment() {
             }
 
             override fun onResponse(call: Call, response: Response) { // 成功時の処理
+                // Jsonを変換するためのAdapterを用意
+                val moshi = Moshi.Builder().build()
+                val jsonAdapter = moshi.adapter(ApiResponse::class.java)
+
+                var list = listOf<Shop>()
+                response.body?.string()?.also {
+                    val apiResponse = jsonAdapter.fromJson(it)
+                    if (apiResponse != null) {
+                        list = apiResponse.results.shop
+                    }
+                }
+                handler.post {
+                    updateRecyclerView(list)
+                }
+            }
+        })
+    }
+
+    // 検索クエリに基づいてデータを更新するメソッド
+    fun updateDataWithQuery(query: String) {
+
+        Log.d("ApiFragment", "Updating data with query: $query")
+        val url = StringBuilder()
+            .append(getString(R.string.base_url)) // https://webservice.recruit.co.jp/hotpepper/gourmet/v1/
+            .append("?key=").append(getString(R.string.api_key)) // Apiを使うためのApiKey
+            .append("&start=").append(1) // 何件目からのデータを取得するか
+            .append("&count=").append(COUNT) // 1回で20件取得する
+            .append("&keyword=").append(URLEncoder.encode(query, "UTF-8")) // 検索クエリを追加
+            .append("&format=json") // フォーマット指定
+            .toString()
+
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) { // Error時の処理
+                Log.d("API_error", "Updating data with query: $query")
+                e.printStackTrace()
+                handler.post {
+                    updateRecyclerView(listOf())
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) { // 成功時の処理
+                Log.d("API_response", "Updating data with query: $query")
                 // Jsonを変換するためのAdapterを用意
                 val moshi = Moshi.Builder().build()
                 val jsonAdapter = moshi.adapter(ApiResponse::class.java)

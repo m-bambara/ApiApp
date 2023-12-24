@@ -1,9 +1,11 @@
 package jp.techacademy.motoyoshi.apiapp
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -44,6 +46,22 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    // ApiFragmentに検索クエリを渡す
+                    val apiFragment = supportFragmentManager.findFragmentByTag("ApiFragmentTag") as? ApiFragment
+                    apiFragment?.updateDataWithQuery(it)
+                    Log.d("keyword",query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
         })
     }
     override fun onResume() {
