@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import jp.techacademy.motoyoshi.apiapp.databinding.FragmentApiBinding
 
+
 class FavoriteFragment: Fragment() {
     private var _binding: FragmentApiBinding? = null
     private val binding get() = _binding!!
@@ -45,7 +46,7 @@ class FavoriteFragment: Fragment() {
             }
             // Itemをクリックしたとき
             onClickItem = {
-                fragmentCallback?.onClickItem(it)
+                fragmentCallback?.onClickItem(it.id, it.imageUrl, it.name, it.url)
             }
         }
         // RecyclerViewの初期化

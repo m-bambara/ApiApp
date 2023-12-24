@@ -46,9 +46,29 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
     }
+    override fun onResume() {
+        super.onResume()
 
-    override fun onClickItem(url: String) {
-        WebViewActivity.start(this, url)
+        // ApiFragmentの更新
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as? ApiFragment)?.let { fragment ->
+            if (fragment.isAdded && fragment.isVisible) {
+                fragment.updateView()
+            }
+        }
+
+        // FavoriteFragmentの更新
+        (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as? FavoriteFragment)?.let { fragment ->
+            if (fragment.isAdded && fragment.isVisible) {
+                fragment.updateData()
+            }
+        }
+
+
+    }
+
+
+    override fun onClickItem(id: String, imageUrl: String, name: String, url: String) {
+        WebViewActivity.start(this, id, imageUrl, name, url)
     }
 
     /**

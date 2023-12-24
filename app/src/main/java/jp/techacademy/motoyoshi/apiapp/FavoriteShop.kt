@@ -24,7 +24,8 @@ open class FavoriteShop(id: String, imageUrl: String, name: String, url: String)
     // realm内部呼び出し用にコンストラクタを用意
     constructor() : this("", "", "", "")
 
-    companion object {
+    //companion object : RealmObject {}
+        companion object {
         /**
          * お気に入りのShopを全件取得
          */
@@ -69,7 +70,7 @@ open class FavoriteShop(id: String, imageUrl: String, name: String, url: String)
             val config = RealmConfiguration.create(schema = setOf(FavoriteShop::class))
             val realm = Realm.open(config)
 
-            // 登録処理
+            //登録処理
             realm.writeBlocking {
                 copyToRealm(favoriteShop)
             }
@@ -99,3 +100,5 @@ open class FavoriteShop(id: String, imageUrl: String, name: String, url: String)
         }
     }
 }
+
+

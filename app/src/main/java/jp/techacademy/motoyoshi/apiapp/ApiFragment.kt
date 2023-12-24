@@ -56,7 +56,7 @@ class ApiFragment : Fragment() {
             }
             // Itemをクリックしたとき
             onClickItem = {
-                fragmentCallback?.onClickItem(it)
+                fragmentCallback?.onClickItem(it.id, it.logoImage, it.name, if (it.couponUrls.sp.isNotEmpty()) it.couponUrls.sp else it.couponUrls.pc)
             }
         }
 
@@ -124,7 +124,7 @@ class ApiFragment : Fragment() {
         })
     }
 
-    private fun updateRecyclerView(list: List<Shop>) {
+     fun updateRecyclerView(list: List<Shop>) {
         apiAdapter.submitList(list)
         // SwipeRefreshLayoutのくるくるを消す
         binding.swipeRefreshLayout.isRefreshing = false

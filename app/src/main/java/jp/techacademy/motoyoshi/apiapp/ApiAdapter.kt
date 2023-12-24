@@ -23,7 +23,7 @@ class ApiAdapter : ListAdapter<Shop, ApiItemViewHolder>(ApiItemCallback()) {
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    var onClickItem: ((String) -> Unit)? = null
+    var onClickItem: ((Shop) -> Unit)? = null
 
     /**
      * ViewHolderを生成して返す
@@ -41,6 +41,7 @@ class ApiAdapter : ListAdapter<Shop, ApiItemViewHolder>(ApiItemCallback()) {
     override fun onBindViewHolder(holder: ApiItemViewHolder, position: Int) {
         holder.bind(getItem(position), position, this)
     }
+
 }
 
 /**
@@ -58,7 +59,8 @@ class ApiItemViewHolder(private val binding: RecyclerFavoriteBinding) :
                 )
             )
             setOnClickListener {
-                adapter.onClickItem?.invoke(if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc)
+                adapter.onClickItem?.invoke(shop)
+                //adapter.onClickItem?.invoke(if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc)
             }
         }
 
